@@ -2,7 +2,7 @@
 
 ---
 
-# Table of contents
+# Table of Contents
 
 ---
 
@@ -57,7 +57,7 @@
 
 > - Best-peforming model outperformed basline by:
 >> - RMSE difference for test vs baseline
->> - R 2  improvement over baseline
+>> - R$^2$  improvement over baseline
 
 #### Next Steps and Recommendations
 
@@ -183,8 +183,7 @@ ___
 ---
 
 [(Back to top)](#table-of-contents)
-
-You will need your own env file with database credentials along with all the necessary files listed below to run my final project notebook. 
+ 
 - [x] Read this README.md
 - [ ] Download the modules (.py files), and final_report.ipynb files into your working directory
 - [ ] Download complete dataset from Kaggle at this [link](https://www.kaggle.com/ananaymital/us-used-cars-dataset?select=used_cars_data.csv) and save in same repo as above files
