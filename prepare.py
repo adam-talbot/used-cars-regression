@@ -8,11 +8,34 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
         
+def quick_clean_cars(df):
+    '''
+    Perform quick. preliminary clean of df by dropping all duplicate rows and all rows with null values
+    '''
+    df = df.reset_index(drop=True) # reset index for this subset of the dataset
+    df = df.drop_duplicates() # drop any duplicate rows
+    cols_to_keep = [] # add list of cols to keep here
+    df = df[cols_to_keep] # keep cols from list above
+    df.franchise_make = df.franchise_make.apply(lambda x: x if x in top_six else 'Other') # simplify column by adding 'Other' category for all values with less than 5% of total
+    df.franchise_dealer = np.where(df.franchise_dealer == True, 1, 0) # change from bool to 1 or 0
+    df.fuel_tank_volume = df.fuel_tank_volume.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.fuel_tank_volume = pd.to_numeric(df.fuel_tank_volume, errors='coerce') # convert to float
+    df.fuel_tank_volume = df.fuel_tank_volume.fillna(round(df.fuel_tank_volume.mean(),2)) # fill missing values with mean
+    df.height = df.height.str.split(' ', expand=True)[0] # same as preceding 3 lines for height column
+    df.height = pd.to_numeric(df.height, errors='coerce')
+    df.height = df.height.fillna(round(df.height.mean(),2))
+    df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
+    
+    return df
+    
 def clean_cars(df):
     '''
-    Take in df and eliminates all database key columns, further refines to only single unit properties, handles all nulls with various methods
+    Take in df and ...
     '''
+    
     # add general cleaning steps here
+    df = df.drop_duplicates() # drop any duplicate rows
+    df = df = handle_missing_values(df) # remove columns with more than half of data missing, then remove rows with more than half of data missing
     
     # drop columns
     df = df.drop(columns=['calculatedbathnbr', # all present values are same as beds + baths, redundant
