@@ -14,17 +14,27 @@ def quick_clean_cars(df):
     '''
     df = df.reset_index(drop=True) # reset index for this subset of the dataset
     df = df.drop_duplicates() # drop any duplicate rows
-    cols_to_keep = [] # add list of cols to keep here
-    df = df[cols_to_keep] # keep cols from list above
+    # cols_to_keep = [] # add list of cols to keep here
+    # df = df[cols_to_keep] # keep cols from list above
+    df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
+    df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
     df.franchise_make = df.franchise_make.apply(lambda x: x if x in top_six else 'Other') # simplify column by adding 'Other' category for all values with less than 5% of total
     df.franchise_dealer = np.where(df.franchise_dealer == True, 1, 0) # change from bool to 1 or 0
+    df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
+    df.front_legroom = df.front_legroom.fillna(round(df.front_legroom.mean(),2)) # fill missing values with mean
     df.fuel_tank_volume = df.fuel_tank_volume.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
     df.fuel_tank_volume = pd.to_numeric(df.fuel_tank_volume, errors='coerce') # convert to float
     df.fuel_tank_volume = df.fuel_tank_volume.fillna(round(df.fuel_tank_volume.mean(),2)) # fill missing values with mean
-    df.height = df.height.str.split(' ', expand=True)[0] # same as preceding 3 lines for height column
-    df.height = pd.to_numeric(df.height, errors='coerce')
+    df.height = df.height.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.height = pd.to_numeric(df.height, errors='coerce') # convert to float
     df.height = df.height.fillna(round(df.height.mean(),2))
     df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
+    df.length = df.length.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
+    df.height = df.height.fillna(round(df.height.mean(),2)) # fill missing values with mean
+    
     
     return df
     
