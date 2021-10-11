@@ -6,6 +6,10 @@
 
 ---
 
+<img src="https://s19538.pcdn.co/wp-content/uploads/2018/08/Car-Gurus-Logo.jpg" alt="Car Gurus" title="Car Gurus Logo" width="600" height="300" />
+
+---
+
 - [Executive Summary](#executive-summary)
     - [Project Objectives](#project-objectives)
     - [Conclusions and Takeaways](#conclusions-and-takeaways)
@@ -21,10 +25,6 @@
     - [Model and Evaluate](#model-and-evaluate)
 - [Conclusion and Next Steps](#conclusion-and-next-steps)
 - [Reproduce My Project](#reproduce-my-project)
-
----
-
-<img src="https://s19538.pcdn.co/wp-content/uploads/2018/08/Car-Gurus-Logo.jpg" alt="Car Gurus" title="Car Gurus Logo" width="600" height="300" />
 
 ---
 
