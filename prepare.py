@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
         
 def clean_cars(df):
     '''
-    Perform quick. preliminary clean of df by dropping all duplicate rows and all rows with null values
+    Get data ready for exploration and modeling, see comments below for more details
     '''
     df = df.reset_index(drop=True) # reset index for this subset of the dataset
     df = df.drop_duplicates() # drop any duplicate rows
