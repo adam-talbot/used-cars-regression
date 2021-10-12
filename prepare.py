@@ -16,25 +16,35 @@ def quick_clean_cars(df):
     df = df.drop_duplicates() # drop any duplicate rows
     # cols_to_keep = [] # add list of cols to keep here
     # df = df[cols_to_keep] # keep cols from list above
-    df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
     df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
-    df.franchise_make = df.franchise_make.apply(lambda x: x if x in top_six else 'Other') # simplify column by adding 'Other' category for all values with less than 5% of total
+    # df.franchise_make = df.franchise_make.apply(lambda x: x if x in top_six else 'Other') # simplify column by adding 'Other' category for all values with less than 5% of total
     df.franchise_dealer = np.where(df.franchise_dealer == True, 1, 0) # change from bool to 1 or 0
-    df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
     df.front_legroom = df.front_legroom.fillna(round(df.front_legroom.mean(),2)) # fill missing values with mean
-    df.fuel_tank_volume = df.fuel_tank_volume.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.fuel_tank_volume = df.fuel_tank_volume.str.split(' ', expand=True)[0] # split and only keep number
     df.fuel_tank_volume = pd.to_numeric(df.fuel_tank_volume, errors='coerce') # convert to float
     df.fuel_tank_volume = df.fuel_tank_volume.fillna(round(df.fuel_tank_volume.mean(),2)) # fill missing values with mean
-    df.height = df.height.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
+    df.height = df.height.str.split(' ', expand=True)[0] # split and only keep number
     df.height = pd.to_numeric(df.height, errors='coerce') # convert to float
-    df.height = df.height.fillna(round(df.height.mean(),2))
-    df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
-    df.length = df.length.str.split(' ', expand=True)[0] # split to get number of gallons and only keep number
-    df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
     df.height = df.height.fillna(round(df.height.mean(),2)) # fill missing values with mean
-    
+    df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
+    df.length = df.length.str.split(' ', expand=True)[0] # split and only keep number
+    df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
+    df.length = df.length.fillna(round(df.length.mean(),2)) # fill missing values with mean
+    top_six = ['Ford', 'Chevrolet', 'Toyota', 'Honda', 'Nissan', 'Jeep'] # biggest proportion, top 6
+    df.make_name = df.make_name.apply(lambda x: x if x in top_six else 'Other') # group all others as 'Other'
+    df.maximum_seating = df.maximum_seating.str.split(' ', expand=True)[0] # split and only keep number
+    df.maximum_seating = pd.to_numeric(df.maximum_seating, errors='coerce') # convert to float
+    df.maximum_seating = df.maximum_seating.fillna(df.maximum_seating.median()) # fill missing values with median
+    df.wheelbase = df.wheelbase.str.split(' ', expand=True)[0] # split and only keep number
+    df.wheelbase = pd.to_numeric(df.wheelbase, errors='coerce') # convert to float
+    df.wheelbase = df.wheelbase.fillna(round(df.wheelbase.mean(),2)) # fill missing values with mean
+    df.width = df.width.str.split(' ', expand=True)[0] # split and only keep number
+    df.width = pd.to_numeric(df.width, errors='coerce') # convert to float
+    df.width = df.width.fillna(round(df.width.mean(),2)) # convert to float
     
     return df
     
