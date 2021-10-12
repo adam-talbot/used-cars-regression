@@ -3,8 +3,8 @@
 # standard imports
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
+# import seaborn as sns
+# import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
         
@@ -152,6 +152,11 @@ def split_60(df):
     '''
     train_validate, test = train_test_split(df, test_size=0.2, random_state=527)
     train, validate = train_test_split(train_validate, test_size=.25, random_state=527)
+    train_prop = train.shape[0] / df.shape[0]
+    val_prop = validate.shape[0] / df.shape[0]
+    test_prop = test.shape[0]/df.shape[0]
+    print(f'Train Proportion: {train_prop:.2f} ({train.shape[0]} rows)\nValidate Proportion: {val_prop:.2f} ({validate.shape[0]} rows)\
+    \nTest Proportion: {test_prop:.2f} ({test.shape[0]} rows)')
     return train, validate, test
 
 def split_80(df):
@@ -161,81 +166,118 @@ def split_80(df):
     '''
     train_validate, test = train_test_split(df, test_size=0.10, random_state=527)
     train, validate = train_test_split(train_validate, test_size=.11, random_state=527)
+    train_prop = train.shape[0] / df.shape[0]
+    val_prop = validate.shape[0] / df.shape[0]
+    test_prop = test.shape[0]/df.shape[0]
+    print(f'Train Proportion: {train_prop:.2f} ({train.shape[0]} rows)\nValidate Proportion: {val_prop:.2f} ({validate.shape[0]} rows)\
+    \nTest Proportion: {test_prop:.2f} ({test.shape[0]} rows)')
     return train, validate, test
 
-def encode_scale(df, scaler, target):
+def scale(train, validate, test, scaler, cols_to_scale):
     '''
-    Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
-    Doesn't scale specified target
+    Returns dfs with indicated columns scaled using scaler passed and original columns dropped
     '''
-    cat_cols = df.select_dtypes('object').columns.tolist()
-    num_cols = df.select_dtypes('number').columns.tolist()
-    num_cols.remove(target)
-    df = pd.get_dummies(data=df, columns=cat_cols)
-    train, validate, test = split_80(df)
-    new_column_names = [c + '_scaled' for c in num_cols]
+    new_column_names = [col + '_scaled' for col in cols_to_scale]
     
     # Fit the scaler on the train
-    scaler.fit(train[num_cols])
+    scaler.fit(train[cols_to_scale])
     
     # transform train validate and test
     train = pd.concat([
         train,
-        pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
+        pd.DataFrame(scaler.transform(train[cols_to_scale]), columns=new_column_names, index=train.index),
     ], axis=1)
     
     validate = pd.concat([
         validate,
-        pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
+        pd.DataFrame(scaler.transform(validate[cols_to_scale]), columns=new_column_names, index=validate.index),
     ], axis=1)
+    
+    test = pd.concat([
+        test,
+        pd.DataFrame(scaler.transform(test[cols_to_scale]), columns=new_column_names, index=test.index),
+    ], axis=1)
+    
+    # drop scaled columns
+    train = train.drop(columns=cols_to_scale)
+    validate = validate.drop(columns=cols_to_scale)
+    test = test.drop(columns=cols_to_scale)
+    
+    return train, validate, test
+
+# def encode_scale(df, scaler, target):
+#     '''
+#     Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
+#     Doesn't scale specified target
+#     '''
+#     cat_cols = df.select_dtypes('object').columns.tolist()
+#     num_cols = df.select_dtypes('number').columns.tolist()
+#     num_cols.remove(target)
+#     df = pd.get_dummies(data=df, columns=cat_cols)
+#     train, validate, test = split_80(df)
+#     new_column_names = [c + '_scaled' for c in num_cols]
+    
+#     # Fit the scaler on the train
+#     scaler.fit(train[num_cols])
+    
+#     # transform train validate and test
+#     train = pd.concat([
+#         train,
+#         pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
+#     ], axis=1)
+    
+#     validate = pd.concat([
+#         validate,
+#         pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
+#     ], axis=1)
  
-    test = pd.concat([
-        test,
-        pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
-    ], axis=1)
+#     test = pd.concat([
+#         test,
+#         pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
+#     ], axis=1)
     
-    # drop scaled columns
-    train = train.drop(columns=num_cols)
-    validate = validate.drop(columns=num_cols)
-    test = test.drop(columns=num_cols)
+#     # drop scaled columns
+#     train = train.drop(columns=num_cols)
+#     validate = validate.drop(columns=num_cols)
+#     test = test.drop(columns=num_cols)
     
-    return train, validate, test
+#     return train, validate, test
 
-def encode_scale_final(df, scaler, target, cols_not_scale):
-    '''
-    Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
-    Doesn't scale specified target and allows user to enter list of columns not to scale, if desired
-    '''
-    cat_cols = df.select_dtypes('object').columns.tolist()
-    num_cols = df.select_dtypes('number').columns.tolist()
-    num_cols.remove(target)
-    num_cols = [col for col in num_cols if col not in cols_not_scale]
-    df = pd.get_dummies(data=df, columns=cat_cols)
-    train, validate, test = split_80(df)
-    new_column_names = [c + '_scaled' for c in num_cols]
+# def encode_scale_final(df, scaler, target, cols_not_scale):
+#     '''
+#     Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
+#     Doesn't scale specified target and allows user to enter list of columns not to scale, if desired
+#     '''
+#     cat_cols = df.select_dtypes('object').columns.tolist()
+#     num_cols = df.select_dtypes('number').columns.tolist()
+#     num_cols.remove(target)
+#     num_cols = [col for col in num_cols if col not in cols_not_scale]
+#     df = pd.get_dummies(data=df, columns=cat_cols)
+#     train, validate, test = split_80(df)
+#     new_column_names = [c + '_scaled' for c in num_cols]
     
-    # Fit the scaler on the train
-    scaler.fit(train[num_cols])
+#     # Fit the scaler on the train
+#     scaler.fit(train[num_cols])
     
-    # transform train validate and test
-    train = pd.concat([
-        train,
-        pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
-    ], axis=1)
+#     # transform train validate and test
+#     train = pd.concat([
+#         train,
+#         pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
+#     ], axis=1)
     
-    validate = pd.concat([
-        validate,
-        pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
-    ], axis=1)
+#     validate = pd.concat([
+#         validate,
+#         pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
+#     ], axis=1)
     
-    test = pd.concat([
-        test,
-        pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
-    ], axis=1)
+#     test = pd.concat([
+#         test,
+#         pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
+#     ], axis=1)
     
-    # drop scaled columns
-    train = train.drop(columns=num_cols)
-    validate = validate.drop(columns=num_cols)
-    test = test.drop(columns=num_cols)
+#     # drop scaled columns
+#     train = train.drop(columns=num_cols)
+#     validate = validate.drop(columns=num_cols)
+#     test = test.drop(columns=num_cols)
     
-    return train, validate, test
+#     return train, validate, test
