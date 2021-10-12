@@ -8,18 +8,16 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
         
-def quick_clean_cars(df):
+def clean_cars(df):
     '''
     Perform quick. preliminary clean of df by dropping all duplicate rows and all rows with null values
     '''
     df = df.reset_index(drop=True) # reset index for this subset of the dataset
     df = df.drop_duplicates() # drop any duplicate rows
-    # cols_to_keep = [] # add list of cols to keep here
-    # df = df[cols_to_keep] # keep cols from list above
+    df = handle_missing_values(df) # drop all columns and rows with more than half of data missing
     df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
     df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
-    # df.franchise_make = df.franchise_make.apply(lambda x: x if x in top_six else 'Other') # simplify column by adding 'Other' category for all values with less than 5% of total
     df.franchise_dealer = np.where(df.franchise_dealer == True, 1, 0) # change from bool to 1 or 0
     df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
@@ -45,46 +43,61 @@ def quick_clean_cars(df):
     df.width = df.width.str.split(' ', expand=True)[0] # split and only keep number
     df.width = pd.to_numeric(df.width, errors='coerce') # convert to float
     df.width = df.width.fillna(round(df.width.mean(),2)) # convert to float
-    
-    return df
-    
-def clean_cars(df):
-    '''
-    Take in df and ...
-    '''
-    
-    # add general cleaning steps here
-    df = df.drop_duplicates() # drop any duplicate rows
-    df = df = handle_missing_values(df) # remove columns with more than half of data missing, then remove rows with more than half of data missing
-    
-    # drop columns
-    df = df.drop(columns=['calculatedbathnbr', # all present values are same as beds + baths, redundant
-                          # add more columns to drop here
-                         ]
-                )
-    
-    # fix data types
-    unit_type_dict = { # created dictionary for all unit type conversions
-        'bedroomcnt' : 'int',
-        # add more unit type conversions here
-                    }
-    df = df.astype(unit_type_dict) # convert unit types
-    
-    # remove any outliers
-    cols_w_outliers = ['bathroomcnt', 'bedroomcnt', 'calculatedfinishedsquarefeet', 'lotsizesquarefeet', 'taxvaluedollarcnt'] # of remaining columns, these need outliers removed
-    df = df = remove_outliers(df, cols_w_outliers) # call function to remove outliers using Tukey method
-    
-    # rename columns
-    rename_dict = {
-    'transactiondate' : 'sale_date',
-    # add more renaming key value pairs here
-    }
-    df = df.rename(columns=rename_dict) # rename columns for readability
-    
-    # add new columns
-    df['sale_month'] = df.sale_date.dt.month # create new columns for month numbers
-    df['sale_week'] = df.sale_date.dt.week # create new columns for week numbers
-    
+    cols_to_drop = [
+        'vin', 
+        'dealer_zip',
+        'description',
+        'engine_cylinders',
+        'engine_type',
+        'exterior_color',
+        'interior_color',
+        'interior_color',
+        'daysonmarket',
+        'listed_date',
+        'listing_id',
+        'main_picture_url',
+        'major_options',
+        'franchise_make',
+        'model_name',
+        'power',
+        'savings_amount',
+        'seller_rating',
+        'sp_id',
+        'sp_name',
+        'torque',
+        'transmission_display',
+        'trimId',
+        'trim_name',
+        'wheel_system_display']
+    df = df.drop(columns=cols_to_drop)
+    # impute remaining missing values
+    df.city_fuel_economy = df.city_fuel_economy.fillna(value=round(df.city_fuel_economy.mean(),0)) # mean
+    df.engine_displacement = df.engine_displacement.fillna(value=round(df.engine_displacement.mean(),0)) # mean
+    df.highway_fuel_economy = df.highway_fuel_economy.fillna(value=round(df.highway_fuel_economy.mean(),0)) # mean
+    df.horsepower = df.horsepower.fillna(value=round(df.horsepower.mean(),0)) # mean
+    df.wheel_system = df.wheel_system.fillna(value=df.wheel_system.mode()[0]) # mode
+    df.mileage = df.mileage.fillna(value=round(df.mileage.mean(),0)) # mean
+    df.fuel_type = df.fuel_type.fillna(value=df.fuel_type.mode()[0]) # mode
+    df.transmission = df.transmission.fillna(value=df.transmission.mode()[0]) # mode
+    df.body_type = df.body_type.fillna(value=df.body_type.mode()[0]) # mode
+    # remove outliers
+    cols_w_outliers = [
+        'back_legroom', 
+        'city_fuel_economy', 
+        'engine_displacement', 
+        'front_legroom',
+        'fuel_tank_volume',
+        'height',
+        'highway_fuel_economy',
+        'horsepower',
+        'length',
+        'maximum_seating',
+        'mileage',
+        'price',
+        'wheelbase',
+        'width',
+        'year']
+    df = remove_outliers(df, cols_w_outliers, 2)
     return df
 
 def nulls_by_col(df):
@@ -119,7 +132,7 @@ def handle_missing_values(df, prop_required_columns=0.5, prop_required_row=0.5):
     df = df.dropna(axis=0, thresh=threshold)
     return df
         
-def remove_outliers(df, cols):
+def remove_outliers(df, cols, k):
     '''
     Removes outliers that are outside of 1.5*IQR
     '''
@@ -127,9 +140,9 @@ def remove_outliers(df, cols):
         Q1 = np.percentile(df[col], 25, interpolation='midpoint')
         Q3 = np.percentile(df[col], 75, interpolation='midpoint')
         IQR = Q3 - Q1
-        UB = Q3 + (1.5 * IQR)
-        LB = Q1 - (1.5 * IQR)
-        df = df[(df[col] < UB) & (df[col] > LB)]
+        UB = Q3 + (k * IQR)
+        LB = Q1 - (k * IQR)
+        df = df[(df[col] <= UB) & (df[col] >= LB)]
     return df
 
 def split_60(df):
