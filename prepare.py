@@ -18,7 +18,7 @@ def clean_cars(df):
     df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
     df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
-    df.franchise_dealer = np.where(df.franchise_dealer == True, 1, 0) # change from bool to 1 or 0
+    df.franchise_dealer = np.where(df.franchise_dealer == True, 'Yes', 'No') # change from bool to 1 or 0
     df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
     df.front_legroom = df.front_legroom.fillna(round(df.front_legroom.mean(),2)) # fill missing values with mean
@@ -28,7 +28,6 @@ def clean_cars(df):
     df.height = df.height.str.split(' ', expand=True)[0] # split and only keep number
     df.height = pd.to_numeric(df.height, errors='coerce') # convert to float
     df.height = df.height.fillna(round(df.height.mean(),2)) # fill missing values with mean
-    # df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
     df.length = df.length.str.split(' ', expand=True)[0] # split and only keep number
     df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
     df.length = df.length.fillna(round(df.length.mean(),2)) # fill missing values with mean
@@ -205,80 +204,3 @@ def scale(train, validate, test, scaler, cols_to_scale):
     test = test.drop(columns=cols_to_scale)
     
     return train, validate, test
-
-# def encode_scale(df, scaler, target):
-#     '''
-#     Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
-#     Doesn't scale specified target
-#     '''
-#     cat_cols = df.select_dtypes('object').columns.tolist()
-#     num_cols = df.select_dtypes('number').columns.tolist()
-#     num_cols.remove(target)
-#     df = pd.get_dummies(data=df, columns=cat_cols)
-#     train, validate, test = split_80(df)
-#     new_column_names = [c + '_scaled' for c in num_cols]
-    
-#     # Fit the scaler on the train
-#     scaler.fit(train[num_cols])
-    
-#     # transform train validate and test
-#     train = pd.concat([
-#         train,
-#         pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
-#     ], axis=1)
-    
-#     validate = pd.concat([
-#         validate,
-#         pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
-#     ], axis=1)
- 
-#     test = pd.concat([
-#         test,
-#         pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
-#     ], axis=1)
-    
-#     # drop scaled columns
-#     train = train.drop(columns=num_cols)
-#     validate = validate.drop(columns=num_cols)
-#     test = test.drop(columns=num_cols)
-    
-#     return train, validate, test
-
-# def encode_scale_final(df, scaler, target, cols_not_scale):
-#     '''
-#     Takes in df and scaler of your choosing and returns split, encoded, and scaled df with unscaled columns dropped
-#     Doesn't scale specified target and allows user to enter list of columns not to scale, if desired
-#     '''
-#     cat_cols = df.select_dtypes('object').columns.tolist()
-#     num_cols = df.select_dtypes('number').columns.tolist()
-#     num_cols.remove(target)
-#     num_cols = [col for col in num_cols if col not in cols_not_scale]
-#     df = pd.get_dummies(data=df, columns=cat_cols)
-#     train, validate, test = split_80(df)
-#     new_column_names = [c + '_scaled' for c in num_cols]
-    
-#     # Fit the scaler on the train
-#     scaler.fit(train[num_cols])
-    
-#     # transform train validate and test
-#     train = pd.concat([
-#         train,
-#         pd.DataFrame(scaler.transform(train[num_cols]), columns=new_column_names, index=train.index),
-#     ], axis=1)
-    
-#     validate = pd.concat([
-#         validate,
-#         pd.DataFrame(scaler.transform(validate[num_cols]), columns=new_column_names, index=validate.index),
-#     ], axis=1)
-    
-#     test = pd.concat([
-#         test,
-#         pd.DataFrame(scaler.transform(test[num_cols]), columns=new_column_names, index=test.index),
-#     ], axis=1)
-    
-#     # drop scaled columns
-#     train = train.drop(columns=num_cols)
-#     validate = validate.drop(columns=num_cols)
-#     test = test.drop(columns=num_cols)
-    
-#     return train, validate, test
