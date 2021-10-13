@@ -94,7 +94,10 @@
 
 [(Back to top)](#table-of-contents)
 
-> - Add initial questions, hypotheses here
+> - Which continuous variables are most related to price?
+>> - Are these relationships statistically significant?
+> - Which categorical variables are most related to price?
+>> - For categorical variables related to price, is there a significant difference in price amongst groups?
 
 #### Formal Hypotheses
 

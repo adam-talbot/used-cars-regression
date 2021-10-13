@@ -28,7 +28,7 @@ def clean_cars(df):
     df.height = df.height.str.split(' ', expand=True)[0] # split and only keep number
     df.height = pd.to_numeric(df.height, errors='coerce') # convert to float
     df.height = df.height.fillna(round(df.height.mean(),2)) # fill missing values with mean
-    df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
+    # df.is_new = np.where(df.is_new == True, 1, 0) # change from bool to 1 or 0
     df.length = df.length.str.split(' ', expand=True)[0] # split and only keep number
     df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
     df.length = df.length.fillna(round(df.length.mean(),2)) # fill missing values with mean
@@ -68,7 +68,8 @@ def clean_cars(df):
         'transmission_display',
         'trimId',
         'trim_name',
-        'wheel_system_display']
+        'wheel_system_display',
+        'is_new']
     df = df.drop(columns=cols_to_drop)
     # impute remaining missing values
     df.city_fuel_economy = df.city_fuel_economy.fillna(value=round(df.city_fuel_economy.mean(),0)) # mean
