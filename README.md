@@ -147,6 +147,7 @@ ___
 >> - Handle erroneous data and/or outliers that need addressing.
 >> - Encode variables as needed.
 >> - Identify unit measures and decide how to best scale any numeric data
+>> - Remove outliers
 > - Import the prepare function from the prepare.py module and use it to prepare the data in the Final Report Notebook.
 > - Plot distributions of individual variables.
 > - *Add data dictionary to notebook that defines fields that will be used in your model and analysis?*
@@ -157,7 +158,7 @@ ___
 [(Back to top)](#table-of-contents)
 
 > - Answer key questions, my hypotheses, and figure out the features that can be used in a regression model to best predict the target variable. 
-> - Run at least 2 statistical tests in data exploration. Document my hypotheses, set an alpha before running the tests, and document the findings well.
+> - Run statistical tests in data exploration. Document my hypotheses, set an alpha before running the tests, and document the findings well.
 > - Create visualizations and run statistical tests that work toward discovering variable relationships (independent with independent and independent with dependent). 
 > - Summarize my conclusions, provide clear answers to my specific questions, and summarize any takeaways/action plan from the work above.
 ___

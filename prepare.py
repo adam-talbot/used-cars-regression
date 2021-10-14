@@ -18,7 +18,7 @@ def clean_cars(df):
     df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
     df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
-    df.franchise_dealer = np.where(df.franchise_dealer == True, 'Yes', 'No') # change from bool to 1 or 0
+    df.franchise_dealer = np.where(df.franchise_dealer == True, 'Yes', 'No') # change from bool to Yes or No
     df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
     df.front_legroom = df.front_legroom.fillna(round(df.front_legroom.mean(),2)) # fill missing values with mean
