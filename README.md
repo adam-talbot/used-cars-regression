@@ -65,8 +65,8 @@
     - `year`
 
 - Best-peforming model outperformed basline by:
-    - Having an RMSE value that was 8,713.55 dollars less
-    - R^2 improvement over baseline from 0 to 0.87
+    - Having an RMSE value that was 9,172 dollars less
+    - R^2 improvement over baseline from 0 to 0.89
 
 #### Next Steps and Recommendations
 
