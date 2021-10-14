@@ -49,23 +49,32 @@
 
 [(Back to top)](#table-of-contents)
 
-> - The best drivers identified via exploration were:
->> - Enter them here when found
-
-> - Best predictors identified via modeling were:
->> - Enter them here when found
+> - The best drivers identified were:
+>> - `back_legroom`
+>> - `city_fuel_economy`
+>> - `engine_displacement`
+>> - `fuel_tank_volume`
+>> - `height`
+>> - `highway_fuel_economy`
+>> - `horsepower`
+>> - `length`
+>> - `maximum_seating`
+>> - `mileage`
+>> - `wheelbase`
+>> - `width`
+>> - `year`
 
 > - Best-peforming model outperformed basline by:
->> - RMSE difference for test vs baseline
->> - R$^2$  improvement over baseline
+>> - Having an RMSE value that was 8,713.55 dollars less
+>> - R^2 improvement over baseline from 0 to 0.87
 
 #### Next Steps and Recommendations
 
 [(Back to top)](#table-of-contents)
 
-> - *Try more combinations of features in model to see if model performance can be improved/more drivers can be indentified*
-> - *Look into creating individual models for subgroups*
-> - **Add more here**
+> - Try more combinations of categorical features to see if I can optimize performance
+> - Do more nuanced imputation using means/modes of subgroups instead of just means/modes of whole population
+> - Try less imputation and see how that affects model performance (drop more nulls)
 
 #### Audience
 > - Anyone interested in taking a look at my project
@@ -81,7 +90,20 @@
 
 | Feature                        | Description                                                                                                            | Data Type | Notes |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------- | ------------- |
-| `add col here`                  |  Add description here                                                        |   dtype     |   Notes    |
+| `back_legroom`                  |  Legroom in the rear seat (inches)                                                          |   float     |   Used in model    |
+| `city_fuel_economy`                  |  Gas mileage in city (mpg)                                                        |   float     |   Used in model    |
+| `engine_displacement`                  |  measure of the cylinder volume of engine (cubic centimeters)                                                       |   float     |   Used in model    |
+| `fuel_tank_volume`                  |  Volume of fuel tank (gallons)                                                          |   float     |   Used in model    |
+| `height`                  |  Height of vehicle (inches)                                                        |   float     |   Used in model    |
+| `highway_fuel_economy`                  |  Gas mileage in highway (mpg)                                                       |   float     |   Used in model    |
+| `horsepower`                  |  Measure of engine power                                                          |   float     |   Used in model    |
+| `length`                  |  Length of vehicle (inches)                                                         |   float     |   Used in model    |
+| `maximum_seating`                  |  Total number of seats                                                         |   float     |   Used in model    |
+| `mileage`                  |  Mileage of vehicle (miles)                                                          |   float     |   Used in model    |
+| `wheelbase`                  |  Distance between centers of front and rear wheels (inches)                                                         |   float     |   Used in model    |
+| `width`                  |  Width of vehicle (inches)                                                        |   float     |   Used in model    |
+| `year`                  |  Year car was released                                                         |   int     |   Used in model    |
+
 
 ---
 | Target | Definition | Data Type | Notes |
@@ -115,16 +137,16 @@
 
 [(Back to top)](#table-of-contents)
 
-- [x] Create README.md with data dictionary, project and business goals, come up with initial hypotheses.
-- [x] Acquire data from Kaggle and create a function to automate this process. Save the function in an acquire.py file to import into the Final Report Notebook.
-- [x] Clean and prepare data for the first iteration through the pipeline, MVP preparation. Create a function to automate the process, store the function in a prepare.py module, and prepare data in Final Report Notebook by importing and using the funtion.
+- [x] Create README.md with data dictionary, project and business goals, and come up with initial hypotheses.
+- [x] Acquire data from Kaggle, save to local .csv and create a function to automate this process. Save the function in an acquire.py file to import into the Final Report Notebook.
+- [x] Clean and prepare data. Create a function to automate the process, store the function in a prepare.py module, and prepare data in Final Report Notebook by importing and using the function.
 - [x] Clearly define at least two hypotheses, set an alpha, run the statistical tests needed, reject or fail to reject the Null Hypothesis, and document findings and takeaways.
 - [x] Establish a baseline accuracy and document well.
-- [x] Train various different regression models.
+- [x] Train several different regression models.
 - [x] Evaluate models on train and validate datasets.
 - [x] Choose the model with that performs the best and evaluate that single model on the test dataset.
 - [x] Document conclusions, takeaways, and next steps in the Final Report Notebook.
-
+- [x] Iterate back through the pipeline imporving each phase as time permits
 ___
 
 ##### Acquire
@@ -134,7 +156,7 @@ ___
 > - Store functions that are needed to acquire data from Kaggle; make sure the acquire.py module contains the necessary imports to run my code.
 > - The final function will return a pandas DataFrame.
 > - Import the acquire function from the acquire.py module and use it to acquire the data in the Final Report Notebook.
-> - Complete some initial data summarization (`.info()`, `.describe()`, `.value_counts()`, ...).
+> - Complete some initial data summarization (`.info()`, `.describe()`, `.shape()`, ...).
 ___
 
 ##### Prepare
@@ -150,7 +172,6 @@ ___
 >> - Remove outliers
 > - Import the prepare function from the prepare.py module and use it to prepare the data in the Final Report Notebook.
 > - Plot distributions of individual variables.
-> - *Add data dictionary to notebook that defines fields that will be used in your model and analysis?*
 ___
 
 ##### Explore
