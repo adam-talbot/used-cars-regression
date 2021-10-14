@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.feature_selection import SelectKBest, f_regression, RFE
 from sklearn.linear_model import LinearRegression
 from scipy import stats
@@ -35,7 +33,6 @@ def group_stats(df, target_col, group_by_col):
     '''
     Returns 1-sample t test for groups and pop mean of target_col grouped by group_by_col
     '''
-    # print(f'~~~~~~~~~~~~~~~~~~~~~~~~~~~\nOne-sample T-Test Results\n~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
     for group, _ in df.groupby(group_by_col):
         t, p = stats.ttest_1samp(df[target_col][df[group_by_col] == group], df[target_col].mean())
         print(f'----------------\n{group}\n----------------\nT-Statistic: {t:.2f}\nP-value: {p:.3f}')

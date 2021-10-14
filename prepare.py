@@ -3,8 +3,6 @@
 # standard imports
 import pandas as pd
 import numpy as np
-# import seaborn as sns
-# import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
         
@@ -17,31 +15,23 @@ def clean_cars(df):
     df = handle_missing_values(df) # drop all columns and rows with more than half of data missing
     df.back_legroom = df.back_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.back_legroom = pd.to_numeric(df.back_legroom, errors='coerce') # convert to float
-    # df.back_legroom = df.back_legroom.fillna(round(df.back_legroom.mean(),2)) # fill missing values with mean
     df.franchise_dealer = np.where(df.franchise_dealer == True, 'Yes', 'No') # change from bool to Yes or No
     df.front_legroom = df.front_legroom.str.split(' ', expand=True)[0] # split and only keep number
     df.front_legroom = pd.to_numeric(df.front_legroom, errors='coerce') # convert to float
-    # df.front_legroom = df.front_legroom.fillna(round(df.front_legroom.mean(),2)) # fill missing values with mean
     df.fuel_tank_volume = df.fuel_tank_volume.str.split(' ', expand=True)[0] # split and only keep number
     df.fuel_tank_volume = pd.to_numeric(df.fuel_tank_volume, errors='coerce') # convert to float
-    # df.fuel_tank_volume = df.fuel_tank_volume.fillna(round(df.fuel_tank_volume.mean(),2)) # fill missing values with mean
     df.height = df.height.str.split(' ', expand=True)[0] # split and only keep number
     df.height = pd.to_numeric(df.height, errors='coerce') # convert to float
-    # df.height = df.height.fillna(round(df.height.mean(),2)) # fill missing values with mean
     df.length = df.length.str.split(' ', expand=True)[0] # split and only keep number
     df.length = pd.to_numeric(df.length, errors='coerce') # convert to float
-    # df.length = df.length.fillna(round(df.length.mean(),2)) # fill missing values with mean
     top_six = ['Ford', 'Chevrolet', 'Toyota', 'Honda', 'Nissan', 'Jeep'] # biggest proportion, top 6
     df.make_name = df.make_name.apply(lambda x: x if x in top_six else 'Other') # group all others as 'Other'
     df.maximum_seating = df.maximum_seating.str.split(' ', expand=True)[0] # split and only keep number
     df.maximum_seating = pd.to_numeric(df.maximum_seating, errors='coerce') # convert to float
-    # df.maximum_seating = df.maximum_seating.fillna(df.maximum_seating.median()) # fill missing values with median
     df.wheelbase = df.wheelbase.str.split(' ', expand=True)[0] # split and only keep number
     df.wheelbase = pd.to_numeric(df.wheelbase, errors='coerce') # convert to float
-    # df.wheelbase = df.wheelbase.fillna(round(df.wheelbase.mean(),2)) # fill missing values with mean
     df.width = df.width.str.split(' ', expand=True)[0] # split and only keep number
     df.width = pd.to_numeric(df.width, errors='coerce') # convert to float
-    # df.width = df.width.fillna(round(df.width.mean(),2)) # convert to float
     cols_to_drop = [
         'vin', 
         'dealer_zip',
@@ -70,34 +60,7 @@ def clean_cars(df):
         'wheel_system_display',
         'is_new']
     df = df.drop(columns=cols_to_drop)
-#     # impute remaining missing values
-#     df.city_fuel_economy = df.city_fuel_economy.fillna(value=round(df.city_fuel_economy.mean(),0)) # mean
-#     df.engine_displacement = df.engine_displacement.fillna(value=round(df.engine_displacement.mean(),0)) # mean
-#     df.highway_fuel_economy = df.highway_fuel_economy.fillna(value=round(df.highway_fuel_economy.mean(),0)) # mean
-#     df.horsepower = df.horsepower.fillna(value=round(df.horsepower.mean(),0)) # mean
-#     df.wheel_system = df.wheel_system.fillna(value=df.wheel_system.mode()[0]) # mode
-#     df.mileage = df.mileage.fillna(value=round(df.mileage.mean(),0)) # mean
-#     df.fuel_type = df.fuel_type.fillna(value=df.fuel_type.mode()[0]) # mode
-#     df.transmission = df.transmission.fillna(value=df.transmission.mode()[0]) # mode
-#     df.body_type = df.body_type.fillna(value=df.body_type.mode()[0]) # mode
-#     # remove outliers
-#     cols_w_outliers = [
-#         'back_legroom', 
-#         'city_fuel_economy', 
-#         'engine_displacement', 
-#         'front_legroom',
-#         'fuel_tank_volume',
-#         'height',
-#         'highway_fuel_economy',
-#         'horsepower',
-#         'length',
-#         'maximum_seating',
-#         'mileage',
-#         'price',
-#         'wheelbase',
-#         'width',
-#         'year']
-#     df = remove_outliers(df, cols_w_outliers, 2)
+    
     return df
 
 def impute(train, validate, test):
@@ -189,25 +152,6 @@ def impute(train, validate, test):
     test.transmission = test.transmission.fillna(transmission_impute) # mode
     test.body_type = test.body_type.fillna(body_type_impute) # mode
     
-#     # remove outliers
-#     cols_w_outliers = [
-#         'back_legroom', 
-#         'city_fuel_economy', 
-#         'engine_displacement', 
-#         'front_legroom',
-#         'fuel_tank_volume',
-#         'height',
-#         'highway_fuel_economy',
-#         'horsepower',
-#         'length',
-#         'maximum_seating',
-#         'mileage',
-#         'price',
-#         'wheelbase',
-#         'width',
-#         'year']
-#     df = remove_outliers(df, cols_w_outliers, 2)
-
     return train, validate, test
 
 def nulls_by_col(df):
