@@ -81,6 +81,7 @@
 
 #### Project Context
 - The full used car dataset I'm using came from Kaggle at this [link](https://www.kaggle.com/ananaymital/us-used-cars-dataset?select=used_cars_data.csv)
+- This full dataset was obtained by Kaggle user AnanayMital by running a crawler on Cargurus inventory in September 2020
 
 #### Data Dictionary
 
